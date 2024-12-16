@@ -11,9 +11,12 @@ class HTMLNode():
         raise NotImplementedError("to_html method not implemented")
     
     def props_to_html(self):
+        if self.props is None:
+            return ""
         list_key_value = self.props.items()
         final_string = reduce(lambda accumulator, current_tuple: accumulator + f' {current_tuple[0]}="{current_tuple[1]}"', list_key_value, "")
         return final_string
+    
 
     def __eq__(self, other):
         return (
@@ -35,8 +38,6 @@ class LeafNode(HTMLNode):
             raise ValueError("LeafNode requires a non-None value.")
         if self.tag is None:
             return self.value
-        if self.props is None:
-            return f"<{self.tag}>{self.value}</{self.tag}>"
         return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
 
     def __eq__(self, other):
@@ -49,3 +50,20 @@ class LeafNode(HTMLNode):
         
     def __repr__(self):
         return f'LeafNode({self.tag}, {self.value}, {self.children}, {self.props})'
+
+class ParentNode(HTMLNode):
+    def __init__(self, tag, children, props=None):
+        super().__init__(tag, None, children, props)
+
+    def to_html(self):
+        if self.tag is None:
+            raise ValueError("ParentNode requires a non-None tag") 
+        if self.children is None:
+            raise ValueError("ParentNode requires at least one child")
+        nested_html = ""
+        for node in self.children:
+            nested_html += node.to_html()
+        return f'<{self.tag}{self.props_to_html()}>{nested_html}</{self.tag}>'
+
+    def __repr__(self):
+        return f'ParentNode({self.tag}, {self.value}, {self.children}, {self.props})'
