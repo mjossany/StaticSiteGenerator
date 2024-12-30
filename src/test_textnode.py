@@ -55,7 +55,7 @@ class TestTextNode(unittest.TestCase):
         self.assertEqual(html_node.props, {"href": "https://google.com"})
 
     def test_text_node_to_html_node_images_text(self):
-        text_node = TextNode("Testando", TextType.IMAGES, "https://google.com")
+        text_node = TextNode("Testando", TextType.IMAGE, "https://google.com")
         html_node = text_node.text_node_to_html_node()
         self.assertEqual(html_node.__repr__(), "LeafNode(img, "", None, {'src': 'https://google.com', 'alt': 'Testando'})")
         self.assertEqual(html_node.tag, 'img')
