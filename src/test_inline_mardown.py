@@ -1,7 +1,7 @@
 import unittest
 
 from textnode import TextNode, TextType
-from inline_mardown import (split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_links, split_nodes_images)
+from inline_mardown import (split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_link, split_nodes_image)
 
 class TestInlineMarkdown(unittest.TestCase):
     def test_old_node_not_text_type(self):
@@ -144,77 +144,77 @@ class TestSplitNodesLinks(unittest.TestCase):
 
     def test_split_node_with_no_link(self):
         node = TextNode("This is just a text.",TextType.TEXT)
-        list_new_nodes = split_nodes_links([node])
+        list_new_nodes = split_nodes_link([node])
         self.assertEqual(list_new_nodes, [node])
 
     def test_split_node_with_no_text_link(self):
         node = TextNode("[to boot dev](https://www.boot.dev)",TextType.TEXT)
-        list_new_nodes = split_nodes_links([node])
-        self.assertEqual(list_new_nodes, [[TextNode("to boot dev", TextType.LINK, "https://www.boot.dev")]])
+        list_new_nodes = split_nodes_link([node])
+        self.assertEqual(list_new_nodes, [TextNode("to boot dev", TextType.LINK, "https://www.boot.dev")])
 
     def test_split_node_with_text_before_link(self):
         node = TextNode("This is text with a link [to boot dev](https://www.boot.dev)",TextType.TEXT)
-        list_new_nodes = split_nodes_links([node])
-        self.assertEqual(list_new_nodes, [[TextNode("This is text with a link ", TextType.TEXT), TextNode("to boot dev", TextType.LINK, "https://www.boot.dev")]])
+        list_new_nodes = split_nodes_link([node])
+        self.assertEqual(list_new_nodes, [TextNode("This is text with a link ", TextType.TEXT), TextNode("to boot dev", TextType.LINK, "https://www.boot.dev")])
 
     def test_split_node_with_text_after_link(self):
         node = TextNode("[to boot dev](https://www.boot.dev) This is text with a link",TextType.TEXT)
-        list_new_nodes = split_nodes_links([node])
-        self.assertEqual(list_new_nodes, [[TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"), TextNode(" This is text with a link", TextType.TEXT)]])
+        list_new_nodes = split_nodes_link([node])
+        self.assertEqual(list_new_nodes, [TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"), TextNode(" This is text with a link", TextType.TEXT)])
 
     def test_split_node_with_no_text_and_two_links(self):
         node = TextNode("[to boot dev](https://www.boot.dev)[to youtube](https://www.youtube.com/@bootdotdev)",TextType.TEXT)
-        list_new_nodes = split_nodes_links([node])
-        self.assertEqual(list_new_nodes, [[TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"), TextNode("to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev")]])
+        list_new_nodes = split_nodes_link([node])
+        self.assertEqual(list_new_nodes, [TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"), TextNode("to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev")])
 
     def test_split_node_with_two_links_and_text_before_middle_after(self):
         node = TextNode("This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev) the end.",TextType.TEXT)
-        list_new_nodes = split_nodes_links([node])
-        self.assertEqual(list_new_nodes, [[TextNode("This is text with a link ", TextType.TEXT), TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),TextNode(" and ", TextType.TEXT),TextNode("to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"), TextNode(" the end.", TextType.TEXT)]])
+        list_new_nodes = split_nodes_link([node])
+        self.assertEqual(list_new_nodes, [TextNode("This is text with a link ", TextType.TEXT), TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"),TextNode(" and ", TextType.TEXT), TextNode("to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev"), TextNode(" the end.", TextType.TEXT)])
 
     def test_split_node_receiving_two_nodes(self):
         node = TextNode("This is text with a link [to boot dev](https://www.boot.dev)",TextType.TEXT)
         node2 = TextNode(" and [to youtube](https://www.youtube.com/@bootdotdev)",TextType.TEXT)
-        list_new_nodes = split_nodes_links([node, node2])
-        self.assertEqual(list_new_nodes, [[TextNode("This is text with a link ", TextType.TEXT), TextNode("to boot dev", TextType.LINK, "https://www.boot.dev")], [TextNode(" and ", TextType.TEXT),TextNode("to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev")]])
+        list_new_nodes = split_nodes_link([node, node2])
+        self.assertEqual(list_new_nodes, [TextNode("This is text with a link ", TextType.TEXT), TextNode("to boot dev", TextType.LINK, "https://www.boot.dev"), TextNode(" and ", TextType.TEXT),TextNode("to youtube", TextType.LINK, "https://www.youtube.com/@bootdotdev")])
 
 class TestSplitNodesImages(unittest.TestCase):
 
     def test_split_node_with_no_image(self):
         node = TextNode("This is just a text.",TextType.TEXT)
-        list_new_nodes = split_nodes_images([node])
+        list_new_nodes = split_nodes_image([node])
         self.assertEqual(list_new_nodes, [node])
 
     def test_split_node_with_no_text_image(self):
         node = TextNode("![to boot dev](https://www.boot.dev)",TextType.TEXT)
-        list_new_nodes = split_nodes_images([node])
-        self.assertEqual(list_new_nodes, [[TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev")]])
+        list_new_nodes = split_nodes_image([node])
+        self.assertEqual(list_new_nodes, [TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev")])
 
     def test_split_node_with_text_before_image(self):
         node = TextNode("This is text with a image ![to boot dev](https://www.boot.dev)",TextType.TEXT)
-        list_new_nodes = split_nodes_images([node])
-        self.assertEqual(list_new_nodes, [[TextNode("This is text with a image ", TextType.TEXT), TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev")]])
+        list_new_nodes = split_nodes_image([node])
+        self.assertEqual(list_new_nodes, [TextNode("This is text with a image ", TextType.TEXT), TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev")])
 
     def test_split_node_with_text_after_image(self):
         node = TextNode("![to boot dev](https://www.boot.dev) This is text with a image",TextType.TEXT)
-        list_new_nodes = split_nodes_images([node])
-        self.assertEqual(list_new_nodes, [[TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"), TextNode(" This is text with a image", TextType.TEXT)]])
+        list_new_nodes = split_nodes_image([node])
+        self.assertEqual(list_new_nodes, [TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"), TextNode(" This is text with a image", TextType.TEXT)])
 
     def test_split_node_with_no_text_and_two_images(self):
         node = TextNode("![to boot dev](https://www.boot.dev)![to youtube](https://www.youtube.com/@bootdotdev)",TextType.TEXT)
-        list_new_nodes = split_nodes_images([node])
-        self.assertEqual(list_new_nodes, [[TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"), TextNode("to youtube", TextType.IMAGE, "https://www.youtube.com/@bootdotdev")]])
+        list_new_nodes = split_nodes_image([node])
+        self.assertEqual(list_new_nodes, [TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"), TextNode("to youtube", TextType.IMAGE, "https://www.youtube.com/@bootdotdev")])
 
     def test_split_node_with_two_images_and_text_before_middle_after(self):
         node = TextNode("This is text with a image ![to boot dev](https://www.boot.dev) and ![to youtube](https://www.youtube.com/@bootdotdev) the end.", TextType.TEXT)
-        list_new_nodes = split_nodes_images([node])
-        self.assertEqual(list_new_nodes, [[TextNode("This is text with a image ", TextType.TEXT), TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"),TextNode(" and ", TextType.TEXT),TextNode("to youtube", TextType.IMAGE, "https://www.youtube.com/@bootdotdev"), TextNode(" the end.", TextType.TEXT)]])
+        list_new_nodes = split_nodes_image([node])
+        self.assertEqual(list_new_nodes, [TextNode("This is text with a image ", TextType.TEXT), TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"),TextNode(" and ", TextType.TEXT),TextNode("to youtube", TextType.IMAGE, "https://www.youtube.com/@bootdotdev"), TextNode(" the end.", TextType.TEXT)])
 
     def test_split_node_receiving_two_nodes(self):
         node = TextNode("This is text with a image ![to boot dev](https://www.boot.dev)",TextType.TEXT)
         node2 = TextNode(" and ![to youtube](https://www.youtube.com/@bootdotdev)",TextType.TEXT)
-        list_new_nodes = split_nodes_images([node, node2])
-        self.assertEqual(list_new_nodes, [[TextNode("This is text with a image ", TextType.TEXT), TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev")], [TextNode(" and ", TextType.TEXT),TextNode("to youtube", TextType.IMAGE, "https://www.youtube.com/@bootdotdev")]])
+        list_new_nodes = split_nodes_image([node, node2])
+        self.assertEqual(list_new_nodes, [TextNode("This is text with a image ", TextType.TEXT), TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"), TextNode(" and ", TextType.TEXT),TextNode("to youtube", TextType.IMAGE, "https://www.youtube.com/@bootdotdev")])
 
 if __name__ == "__main__":
     unittest.main()

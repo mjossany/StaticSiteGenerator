@@ -1,4 +1,4 @@
-from inline_mardown import split_nodes_images, split_nodes_links
+from inline_mardown import split_nodes_image, split_nodes_link
 from textnode import TextNode, TextType
 
 node = TextNode(
@@ -6,4 +6,4 @@ node = TextNode(
     TextType.TEXT,
 )
 
-split_nodes_links([node])
+split_nodes_link([node])
