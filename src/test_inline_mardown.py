@@ -1,7 +1,7 @@
 import unittest
 
 from textnode import TextNode, TextType
-from inline_mardown import (split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_link, split_nodes_image)
+from inline_mardown import (split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_link, split_nodes_image, text_to_textnodes)
 
 class TestInlineMarkdown(unittest.TestCase):
     def test_old_node_not_text_type(self):
@@ -215,6 +215,27 @@ class TestSplitNodesImages(unittest.TestCase):
         node2 = TextNode(" and ![to youtube](https://www.youtube.com/@bootdotdev)",TextType.TEXT)
         list_new_nodes = split_nodes_image([node, node2])
         self.assertEqual(list_new_nodes, [TextNode("This is text with a image ", TextType.TEXT), TextNode("to boot dev", TextType.IMAGE, "https://www.boot.dev"), TextNode(" and ", TextType.TEXT),TextNode("to youtube", TextType.IMAGE, "https://www.youtube.com/@bootdotdev")])
+
+class TestTextToTextNodes(unittest.TestCase):
+    def test_text_to_textnodes(self):
+        nodes = text_to_textnodes(
+            "This is **text** with an *italic* word and a `code block` and an ![image](https://i.imgur.com/zjjcJKZ.png) and a [link](https://boot.dev)"
+        )
+        self.assertListEqual(
+            [
+                TextNode("This is ", TextType.TEXT),
+                TextNode("text", TextType.BOLD),
+                TextNode(" with an ", TextType.TEXT),
+                TextNode("italic", TextType.ITALIC),
+                TextNode(" word and a ", TextType.TEXT),
+                TextNode("code block", TextType.CODE),
+                TextNode(" and an ", TextType.TEXT),
+                TextNode("image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
+                TextNode(" and a ", TextType.TEXT),
+                TextNode("link", TextType.LINK, "https://boot.dev"),
+            ],
+            nodes,
+        )
 
 if __name__ == "__main__":
     unittest.main()

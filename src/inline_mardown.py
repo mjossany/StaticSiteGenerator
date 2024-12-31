@@ -27,10 +27,6 @@ def extract_markdown_images(text):
 def extract_markdown_links(text):
     return re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
                             
-def split_nodes_images(old_nodes):
-    for node in old_nodes:
-        return extract_markdown_images(node.text)
-
 def split_nodes_link(old_nodes):
     new_nodes = []
     for old_node in old_nodes:
@@ -81,4 +77,13 @@ def split_nodes_image(old_nodes):
             original_text = sections[1]
         if original_text != "":
             new_nodes.append(TextNode(original_text, TextType.TEXT))
+    return new_nodes
+
+def text_to_textnodes(text):
+    node = TextNode(text, TextType.TEXT)
+    new_nodes = split_nodes_image([node])
+    new_nodes = split_nodes_link(new_nodes)
+    new_nodes = split_nodes_delimiter(new_nodes, "**", TextType.BOLD)
+    new_nodes = split_nodes_delimiter(new_nodes, "*", TextType.ITALIC)
+    new_nodes = split_nodes_delimiter(new_nodes, "`", TextType.CODE)
     return new_nodes

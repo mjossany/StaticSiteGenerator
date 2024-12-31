@@ -1,9 +1,6 @@
-from inline_mardown import split_nodes_image, split_nodes_link
+from inline_mardown import text_to_textnodes
 from textnode import TextNode, TextType
 
-node = TextNode(
-    "Some text [to boot dev](https://www.boot.dev), [to youtube](https://www.youtube.com/@bootdotdev)",
-    TextType.TEXT,
-)
+text = "This is **text** with an *italic* word and a `code block` and an ![obi wan image](https://i.imgur.com/fJRm4Vk.jpeg) and a [link](https://boot.dev)"
 
-split_nodes_link([node])
+text_to_textnodes(text)
