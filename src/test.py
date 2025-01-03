@@ -1,11 +1,18 @@
-from block_markdown import markdown_to_blocks
+from block_markdown import block_to_block_type, markdown_to_html_node
 
-markdown = """ # This is a heading 
+markdown = """
+> This is a
+> blockquote block
 
- This is a paragraph of text. It has some **bold** and *italic* words inside of it. 
+this is paragraph text
 
- * This is the first list item in a list block
-* This is a list item
-* This is another list item """
+"""
 
-markdown_to_blocks(markdown)
+node = markdown_to_html_node(markdown)
+print(node.to_html())
+
+# block = """1. First item
+# 2. Second item
+# 3. Third item'
+# """
+# block_to_block_type(block)
