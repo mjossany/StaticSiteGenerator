@@ -1,11 +1,9 @@
 from block_markdown import block_to_block_type, markdown_to_html_node
 
 markdown = """
-> This is a
-> blockquote block
-
-this is paragraph text
-
+```
+This is code
+```
 """
 
 node = markdown_to_html_node(markdown)

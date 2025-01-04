@@ -62,6 +62,7 @@ def markdown_to_html_node(markdown):
             html_nodes_list.append(LeafNode(tag, value))
             continue
         if block_type == "code":
+            block = block.replace('```', '')
             code_leaf_node = LeafNode('code', block)
             code_parent_node = ParentNode('pre', [code_leaf_node])
             html_nodes_list.append(code_parent_node)
