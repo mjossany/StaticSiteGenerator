@@ -9,8 +9,13 @@ def main():
     copy_from_static_to_public()
 
 def copy_from_static_to_public():
+    destination_dir = "public"
     if os.path.exists("public") and len(os.listdir("public")) > 0:
         clear_destination_folder("public")
+    if not os.path.exists("public"):
+        current_path = os.path.dirname(os.path.abspath("src"))
+        destination_path = os.path.join(current_path, destination_dir)
+        os.mkdir(destination_path)
     copy_files_from_source_folder_to_destination_folder("static", "public")
     
 
