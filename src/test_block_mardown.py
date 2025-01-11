@@ -1,6 +1,6 @@
 import unittest
 
-from block_markdown import (markdown_to_blocks, block_to_block_type, markdown_to_html_node)
+from block_markdown import (markdown_to_blocks, block_to_block_type, markdown_to_html_node, extract_title)
 
 class TestBlockMarkdownSplitting(unittest.TestCase):
     def test_mardown_to_blocks(self):
@@ -200,5 +200,33 @@ this is paragraph text
             "<div><blockquote>This is a blockquote block</blockquote><p>this is paragraph text</p></div>",
         )
 
+class TestExtractTile(unittest.TestCase):
+    def test_extract_title(self):
+        markdown = """
+# This is a heading
+
+This is a paragraph of text. It has some **bold** and *italic* words inside of it.
+
+* This is the first list item in a list block
+* This is a list item
+* This is another list item
+"""
+        self.assertEqual(extract_title(markdown), "This is a heading")
+
+    def test_extract_title_two(self):
+        markdown = """
+## This is a heading
+
+This is a paragraph of text. It has some **bold** and *italic* words inside of it.
+
+* This is the first list item in a list block
+* This is a list item
+* This is another list item
+"""
+        with self.assertRaises(Exception) as context:
+            extract_title(markdown)
+        self.assertEqual(str(context.exception), "Markdown must at least one h1 block")
+
+        
 if __name__ == "__main__":
     unittest.main()

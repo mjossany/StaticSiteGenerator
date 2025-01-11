@@ -112,3 +112,10 @@ def markdown_to_html_node(markdown):
 def set_heading_info(block):
     block_parts = block.split(' ', 1)
     return f"h{len(block_parts[0])}", block_parts[1]
+
+def extract_title(markdown):
+    blocks = markdown_to_blocks(markdown)
+    for block in blocks:
+        if block.startswith('# '):
+            return block[2:]
+    raise Exception("Markdown must at least one h1 block")
